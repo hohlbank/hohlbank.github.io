@@ -7,32 +7,14 @@
 </head>
 <body>
 
-<div id="login">
-    <h2>Вход</h2>
-    <form onsubmit="handleLogin(event)">
-        <input type="text" id="username" placeholder="Логин" required><br><br>
-        <input type="password" id="password" placeholder="Пароль" required><br><br>
-        <button type="submit">Войти</button>
-    </form>
-    <div id="message"></div>
-</div>
+<!-- ВАЖНО: твой весь HTML и CSS остаётся прежним -->
+<!-- Я показываю только рабочую JS-часть, чтобы не ломать верстку -->
 
-<div id="dashboard" style="display:none;">
-    <h2>Личный кабинет</h2>
-    <p>Пользователь: <strong id="currentUser"></strong></p>
-    <p>Ник: <strong id="currentNickname"></strong></p>
-    <p>Время входа: <strong id="loginTime"></strong></p>
-    <button onclick="handleLogout()">Выйти</button>
-    <hr>
-    <button onclick="createCard()">Создать карту</button>
-    <div id="cardInfo"></div>
-</div>
-
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
+// Firebase конфигурация
 const firebaseConfig = {
     apiKey: "AIzaSyAQMCpOIf5eJYzD0ACbM8ZnfzNItjN8PZA",
     authDomain: "hohlbank.firebaseapp.com",
@@ -46,78 +28,78 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-let currentUsername = "";
+let currentUsername = '';
+let balanceVisible = true;
 
-function showMessage(text, color="red") {
-    const el = document.getElementById("message");
-    el.innerText = text;
-    el.style.color = color;
-}
+window.onload = function() {
+    const session = localStorage.getItem('hohlgramSession');
+    if (session) {
+        const userData = JSON.parse(session);
+        showDashboard(userData);
+    }
+};
+
+// ================= LOGIN ЧЕРЕЗ FIREBASE =================
 
 async function handleLogin(event) {
     event.preventDefault();
-
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
 
     if (!username || !password) {
-        showMessage("Введите логин и пароль");
+        showMessage('Введите логин и пароль', 'error');
         return;
     }
 
     try {
-        const snapshot = await database.ref("users/" + username).once("value");
+        const snapshot = await database.ref('users/' + username).once('value');
         const user = snapshot.val();
 
         if (!user) {
-            showMessage("Пользователь не найден");
+            showMessage('Пользователь не найден', 'error');
             return;
         }
 
         if (user.password !== password) {
-            showMessage("Неверный пароль");
+            showMessage('Неверный пароль', 'error');
             return;
         }
 
         const userData = {
             username: username,
             name: user.name,
-            loginTime: new Date().toLocaleString("ru-RU")
+            loginTime: new Date().toLocaleString('ru-RU')
         };
 
-        localStorage.setItem("hohlgramSession", JSON.stringify(userData));
         currentUsername = username;
+        localStorage.setItem('hohlgramSession', JSON.stringify(userData));
 
-        document.getElementById("login").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
+        showMessage('Вход выполнен успешно!', 'success');
 
-        document.getElementById("currentUser").innerText = user.name;
-        document.getElementById("currentNickname").innerText = username;
-        document.getElementById("loginTime").innerText = userData.loginTime;
-
-        loadUserCard();
+        setTimeout(() => {
+            showDashboard(userData);
+        }, 800);
 
     } catch (error) {
         console.error(error);
-        showMessage("Ошибка подключения к серверу");
+        showMessage('Ошибка подключения к серверу', 'error');
     }
 }
 
-function handleLogout() {
-    localStorage.removeItem("hohlgramSession");
-    location.reload();
-}
+// ================= СОЗДАНИЕ КАРТЫ =================
 
 function generateCardNumber() {
-    let number = "4532 ";
+    let number = '4532 ';
     for (let i = 0; i < 3; i++) {
-        number += Math.floor(1000 + Math.random() * 9000) + " ";
+        number += Math.floor(1000 + Math.random() * 9000) + ' ';
     }
     return number.trim();
 }
 
 async function createCard() {
-    const userSnapshot = await database.ref("users/" + currentUsername).once("value");
+
+    const userSnapshot = await database.ref('users/' + currentUsername).once('value');
     const userName = userSnapshot.val().name;
 
     const newCard = {
@@ -126,43 +108,92 @@ async function createCard() {
         balance: 0
     };
 
-    await database.ref("cards/" + currentUsername).set(newCard);
-    loadUserCard();
+    await database.ref('cards/' + currentUsername).set(newCard);
+    showCard(newCard);
 }
 
-async function loadUserCard() {
-    const snapshot = await database.ref("cards/" + currentUsername).once("value");
-    const card = snapshot.val();
+// ================= ПЕРЕВОД =================
 
-    if (!card) {
-        document.getElementById("cardInfo").innerHTML = "<p>Карты нет</p>";
+async function processTransfer(type) {
+
+    let recipient, amount;
+
+    if (type === 'nickname') {
+        recipient = document.getElementById('recipientNickname').value.trim();
+        amount = parseFloat(document.getElementById('amountNickname').value);
+    } else {
+        recipient = document.getElementById('recipientCard').value.trim().replace(/\s/g, '');
+        amount = parseFloat(document.getElementById('amountCard').value);
+    }
+
+    if (!recipient || !amount || amount < 1) {
+        alert('Заполните все поля корректно');
         return;
     }
 
-    document.getElementById("cardInfo").innerHTML = `
-        <p><strong>Номер:</strong> ${card.number}</p>
-        <p><strong>Владелец:</strong> ${card.name}</p>
-        <p><strong>Баланс:</strong> ${card.balance} ₽</p>
-    `;
+    const senderSnapshot = await database.ref('cards/' + currentUsername).once('value');
+    const senderCard = senderSnapshot.val();
+
+    if (!senderCard || senderCard.balance < amount) {
+        alert('Недостаточно средств');
+        return;
+    }
+
+    let recipientUsername = null;
+
+    if (type === 'nickname') {
+
+        const recipientSnapshot = await database.ref('users/' + recipient).once('value');
+
+        if (!recipientSnapshot.exists()) {
+            alert('Пользователь не найден');
+            return;
+        }
+
+        recipientUsername = recipient;
+
+    } else {
+
+        const cardsSnapshot = await database.ref('cards').once('value');
+        const allCards = cardsSnapshot.val();
+
+        for (let username in allCards) {
+            if (allCards[username].number.replace(/\s/g, '') === recipient) {
+                recipientUsername = username;
+                break;
+            }
+        }
+
+        if (!recipientUsername) {
+            alert('Карта не найдена');
+            return;
+        }
+    }
+
+    if (recipientUsername === currentUsername) {
+        alert('Нельзя переводить самому себе');
+        return;
+    }
+
+    const recipientSnapshot = await database.ref('cards/' + recipientUsername).once('value');
+    const recipientCard = recipientSnapshot.val();
+
+    const updates = {};
+    updates['cards/' + currentUsername + '/balance'] = senderCard.balance - amount;
+    updates['cards/' + recipientUsername + '/balance'] = recipientCard.balance + amount;
+
+    await database.ref().update(updates);
+
+    alert('Перевод выполнен!');
 }
 
-window.onload = function() {
-    const session = localStorage.getItem("hohlgramSession");
-    if (session) {
-        const userData = JSON.parse(session);
-        currentUsername = userData.username;
+// ================= ВЫХОД =================
 
-        document.getElementById("login").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
+function handleLogout() {
+    localStorage.removeItem('hohlgramSession');
+    location.reload();
+}
 
-        document.getElementById("currentUser").innerText = userData.name;
-        document.getElementById("currentNickname").innerText = userData.username;
-        document.getElementById("loginTime").innerText = userData.loginTime;
-
-        loadUserCard();
-    }
-};
 </script>
-
 </body>
 </html>
