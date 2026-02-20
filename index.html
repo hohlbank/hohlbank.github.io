@@ -1,0 +1,1370 @@
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Z]Hohl Bank</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(30, 30, 45, 0.6);
+            --border-color: rgba(139, 92, 246, 0.2);
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-primary);
+            background-image: 
+                radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
+        }
+
+        .container {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px var(--border-color);
+            overflow: hidden;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        .container.wide {
+            max-width: 1200px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.1) 100%);
+            padding: 48px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        #.header::before {
+         #   content: '';
+         #   position: absolute;
+          #  top: 0;
+           # left: 0;
+           # right: 0;
+           # bottom: 0;
+           # background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+           # opacity: 0.5;
+        #}
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-container {
+            padding: 40px 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(161, 161, 170, 0.5);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 24px;
+            padding: 32px;
+        }
+
+        .dashboard-header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header h2 {
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+        }
+
+        .user-info p {
+            margin: 12px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info p strong {
+            color: var(--text-primary);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            color: var(--accent-red) !important;
+            margin-top: 20px;
+            box-shadow: none !important;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.2) !important;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        .card-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-section h3::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border-radius: 50%;
+        }
+
+        .bank-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.2) 50%, rgba(59, 130, 246, 0.3) 100%);
+            border-radius: 20px;
+            padding: 28px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 40px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .bank-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            animation: shimmer 8s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-logo {
+            font-size: 28px;
+            opacity: 0.9;
+        }
+
+        .card-type {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .card-chip {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chip {
+            width: 50px;
+            height: 38px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 60%;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .card-number {
+            font-size: 22px;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-holder, .card-expiry {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .label {
+            font-size: 10px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .value {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .no-card-message {
+            text-align: center;
+            padding: 48px 24px;
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+        }
+
+        .no-card-message p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .card-balance {
+            background: var(--glass-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .card-balance p {
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .balance-hidden {
+            filter: blur(12px);
+            user-select: none;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn-small:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-name-input {
+            padding: 12px 16px;
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 14px;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .card-name-input:focus {
+            border-color: var(--accent-purple);
+        }
+
+        .btn-action {
+            padding: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--accent-purple);
+        }
+
+        .btn-danger {
+            color: var(--accent-red);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--accent-red);
+        }
+
+        .transfer-panel h3 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transfer-panel h3::before {
+            content: '💸';
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+        }
+
+        .transfer-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--glass-bg);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .transfer-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .transfer-input {
+            padding: 14px 16px;
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .transfer-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .transfer-input::placeholder {
+            color: rgba(161, 161, 170, 0.5);
+        }
+
+        .amount-input {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-transfer {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-transfer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-transfer:active {
+            transform: translateY(0);
+        }
+
+        .btn-transfer:disabled {
+            background: var(--glass-bg);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            border: 1px solid var(--glass-border);
+        }
+
+        .transfer-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: -12px;
+            padding-left: 4px;
+        }
+
+        .transfer-history {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .transfer-history::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .transfer-history::-webkit-scrollbar-track {
+            background: var(--glass-bg);
+            border-radius: 3px;
+        }
+
+        .transfer-history::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 3px;
+        }
+
+        .transfer-history::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+
+        .transfer-history h4 {
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .history-item {
+            background: var(--glass-bg);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 3px solid;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            background: rgba(139, 92, 246, 0.05);
+            transform: translateX(4px);
+        }
+
+        .history-item.sent {
+            border-left-color: var(--accent-red);
+        }
+
+        .history-item.received {
+            border-left-color: var(--accent-green);
+        }
+
+        .history-item p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .history-amount {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .history-amount.positive {
+            color: var(--accent-green);
+        }
+
+        .history-amount.negative {
+            color: var(--accent-red);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .feature-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.1);
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .feature-text h4 {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .feature-text p {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .container.wide {
+                max-width: 600px;
+            }
+
+            .transfer-history {
+                max-height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            .dashboard-layout {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <div class="logo-icon">💰</div>
+            <h1>Hohl Bank</h1>
+            <p>Лучший банк на хохланде</p>
+        </div>
+
+        <form id="loginForm" class="form-container" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Имя пользователя</label>
+                <input type="text" id="username" name="username" required autocomplete="username" placeholder="Введите логин">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Введите пароль">
+            </div>
+
+            <button type="submit" class="btn">Войти в систему</button>
+
+            <div id="message" class="message"></div>
+        </form>
+
+        <div id="dashboard" class="dashboard">
+            <div class="dashboard-layout">
+                <div class="dashboard-header">
+                    <h2>Личный кабинет</h2>
+                </div>
+                
+                <div class="left-section">
+                    <div class="glass-card user-info">
+                        <p><span>Пользователь</span> <strong id="currentUser"></strong></p>
+                        <p><span>Никнейм</span> <strong id="currentNickname"></strong></p>
+                        <p><span>Время входа</span> <strong id="loginTime"></strong></p>
+                        <button onclick="handleLogout()" class="btn logout-btn">Выйти из системы</button>
+                    </div>
+                    
+                    <div class="glass-card card-section">
+                        <h3>Моя карта</h3>
+                        
+                        <div id="noCardMessage" class="no-card-message">
+                            <p>У вас пока нет карты</p>
+                            <button onclick="createCard()" class="btn">Создать карту</button>
+                        </div>
+                        
+                        <div id="cardContainer" style="display: none;">
+                            <div class="bank-card">
+                                <div class="card-header">
+                                    <div class="card-logo">💳</div>
+                                    <div class="card-type">HOHL AI</div>
+                                </div>
+                                <div class="card-chip">
+                                    <div class="chip"></div>
+                                </div>
+                                <div class="card-number">
+                                    <span id="cardNumber">•••• •••• •••• ••••</span>
+                                </div>
+                                <div class="card-info">
+                                    <div class="card-holder">
+                                        <div class="label">Владелец карты</div>
+                                        <div class="value" id="cardHolder">FLOT</div>
+                                    </div>
+                                    <div class="card-expiry">
+                                        <div class="label">Действительна до</div>
+                                        <div class="value">12/28</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-balance">
+                                <p><span>Доступный баланс</span></p>
+                                <p class="balance-amount" id="balance">1000 ₽</p>
+                                <button onclick="toggleBalanceVisibility()" class="btn-small" id="toggleBalanceBtn">Скрыть баланс</button>
+                            </div>
+                            
+                            <div class="card-actions">
+                                <input type="text" id="cardNameInput" placeholder="Новое название карты" class="card-name-input">
+                                <button onclick="renameCard()" class="btn-action">Изменить название</button>
+                                <button onclick="deleteCard()" class="btn-action btn-danger">Удалить карту</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">⚡</div>
+                            <div class="feature-text">
+                                <h4>Переводы</h4>
+                                <p>Не доходят</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔒</div>
+                            <div class="feature-text">
+                                <h4>Безопасность данных</h4>
+                                <p>Сливаем все данные во все чаты</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🚀</div>
+                            <div class="feature-text">
+                                <h4>Всегда улучшается</h4>
+                                <p>Удаление базы данных по выходным</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-section">
+                    <div class="glass-card transfer-panel">
+                        <h3>Перевод средств</h3>
+                        
+                        <div class="transfer-tabs">
+                            <button type="button" class="tab-btn active" onclick="switchTab('nickname')">По никнейму</button>
+                            <button type="button" class="tab-btn" onclick="switchTab('card')">По номеру карты</button>
+                        </div>
+
+                        <div id="transferFormNickname" class="transfer-form">
+                            <input type="text" id="recipientNickname" class="transfer-input" placeholder="Введите никнейм получателя">
+                            <p class="transfer-hint">Например: genka_, Flot55</p>
+                            
+                            <input type="number" id="amountNickname" class="transfer-input amount-input" placeholder="Сумма перевода" min="1">
+                            <p class="transfer-hint">Минимум 1 ₽</p>
+                            
+                            <button onclick="processTransfer('nickname')" class="btn-transfer">Выполнить перевод</button>
+                        </div>
+
+                        <div id="transferFormCard" class="transfer-form" style="display: none;">
+                            <input type="text" id="recipientCard" class="transfer-input" placeholder="Номер карты получателя" maxlength="19">
+                            <p class="transfer-hint">Формат: 4532 1234 5678 9012</p>
+                            
+                            <input type="number" id="amountCard" class="transfer-input amount-input" placeholder="Сумма перевода" min="1">
+                            <p class="transfer-hint">Минимум 1 ₽</p>
+                            
+                            <button onclick="processTransfer('card')" class="btn-transfer">Выполнить перевод</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card transfer-history">
+                        <h4>История операций</h4>
+                        <div id="historyContainer">
+                            <p style="color: var(--text-secondary); text-align: center; padding: 20px;">История пуста</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase конфигурация
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQMCpOIf5eJYzD0ACbM8ZnfzNItjN8PZA",
+            authDomain: "hohlbank.firebaseapp.com",
+            databaseURL: "https://hohlbank-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "hohlbank",
+            storageBucket: "hohlbank.firebasestorage.app",
+            messagingSenderId: "792378699838",
+            appId: "1:792378699838:web:4ab670b39a7f9bd550a16f",
+            measurementId: "G-9GYXV82D06"
+        };
+
+        // Инициализация Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+
+        let currentUsername = '';
+        let balanceVisible = true;
+        let activeTab = 'nickname';
+
+        window.onload = function() {
+            const session = localStorage.getItem('hohlgramSession');
+            if (session) {
+                const userData = JSON.parse(session);
+                showDashboard(userData);
+            }
+        };
+
+        function generateCardNumber() {
+            let number = '4532 ';
+            for (let i = 0; i < 3; i++) {
+                number += Math.floor(1000 + Math.random() * 9000) + ' ';
+            }
+            return number.trim();
+        }
+
+        async function handleLogin(event) {
+    event.preventDefault();
+    
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (!username || !password) {
+        showMessage('Введите логин и пароль', 'error');
+        return;
+    }
+
+    try {
+        const snapshot = await database.ref('users/' + username).once('value');
+        const user = snapshot.val();
+
+        if (!user) {
+            showMessage('Пользователь не найден', 'error');
+            return;
+        }
+
+        if (user.password !== password) {
+            showMessage('Неверный пароль', 'error');
+            return;
+        }
+
+        const userData = {
+            username: username,
+            name: user.name,
+            loginTime: new Date().toLocaleString('ru-RU')
+        };
+
+        currentUsername = username;
+        localStorage.setItem('hohlgramSession', JSON.stringify(userData));
+
+        showMessage('Вход выполнен успешно!', 'success');
+
+        setTimeout(() => {
+            showDashboard(userData);
+        }, 1000);
+
+    } catch (error) {
+        console.error('Ошибка авторизации:', error);
+        showMessage('Ошибка подключения к серверу', 'error');
+    }
+}
+
+
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function showDashboard(userData) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('mainContainer').classList.add('wide');
+            document.getElementById('currentUser').textContent = userData.name;
+            document.getElementById('currentNickname').textContent = userData.username;
+            document.getElementById('loginTime').textContent = userData.loginTime;
+            
+            currentUsername = userData.username;
+            
+            loadUserCard();
+            loadTransferHistory();
+        }
+
+        function loadUserCard() {
+            database.ref('cards/' + currentUsername).once('value')
+                .then((snapshot) => {
+                    const card = snapshot.val();
+                    if (card) {
+                        showCard(card);
+                    } else {
+                        showNoCard();
+                    }
+                })
+                .catch((error) => {
+                    console.error('Ошибка загрузки карты:', error);
+                    showNoCard();
+                });
+        }
+
+        function showNoCard() {
+            document.getElementById('noCardMessage').style.display = 'block';
+            document.getElementById('cardContainer').style.display = 'none';
+        }
+
+        function showCard(card) {
+            document.getElementById('noCardMessage').style.display = 'none';
+            document.getElementById('cardContainer').style.display = 'block';
+            document.getElementById('cardNumber').textContent = card.number;
+            document.getElementById('cardHolder').textContent = card.name.toUpperCase();
+            document.getElementById('balance').textContent = card.balance + ' ₽';
+            balanceVisible = true;
+
+            // Подписка на изменения баланса в реальном времени
+            database.ref('cards/' + currentUsername + '/balance').on('value', (snapshot) => {
+                const balance = snapshot.val();
+                if (balance !== null) {
+                    document.getElementById('balance').textContent = balance + ' ₽';
+                }
+            });
+        }
+
+        function createCard() {
+            const cardNumber = generateCardNumber();
+            const userName = users.find(u => u.username === currentUsername).name;
+            
+            const newCard = {
+                number: cardNumber,
+                name: userName,
+                balance: 0
+            };
+
+            database.ref('cards/' + currentUsername).set(newCard)
+                .then(() => {
+                    showCard(newCard);
+                })
+                .catch((error) => {
+                    console.error('Ошибка создания карты:', error);
+                    alert('Ошибка создания карты');
+                });
+        }
+
+        function deleteCard() {
+            if (confirm('Вы уверены, что хотите удалить карту?')) {
+                database.ref('cards/' + currentUsername).remove()
+                    .then(() => {
+                        database.ref('cards/' + currentUsername + '/balance').off();
+                        showNoCard();
+                    })
+                    .catch((error) => {
+                        console.error('Ошибка удаления карты:', error);
+                        alert('Ошибка удаления карты');
+                    });
+            }
+        }
+
+        function renameCard() {
+            const newName = document.getElementById('cardNameInput').value.trim();
+            
+            if (!newName) {
+                alert('Введите новое название карты');
+                return;
+            }
+            
+            database.ref('cards/' + currentUsername + '/name').set(newName)
+                .then(() => {
+                    document.getElementById('cardHolder').textContent = newName.toUpperCase();
+                    document.getElementById('cardNameInput').value = '';
+                    alert('Название карты изменено!');
+                })
+                .catch((error) => {
+                    console.error('Ошибка изменения названия:', error);
+                    alert('Ошибка изменения названия');
+                });
+        }
+
+        function toggleBalanceVisibility() {
+            const balanceEl = document.getElementById('balance');
+            const btnEl = document.getElementById('toggleBalanceBtn');
+            
+            if (balanceVisible) {
+                balanceEl.classList.add('balance-hidden');
+                btnEl.textContent = 'Показать баланс';
+                balanceVisible = false;
+            } else {
+                balanceEl.classList.remove('balance-hidden');
+                btnEl.textContent = 'Скрыть баланс';
+                balanceVisible = true;
+            }
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'nickname') {
+                tabs[0].classList.add('active');
+                document.getElementById('transferFormNickname').style.display = 'flex';
+                document.getElementById('transferFormCard').style.display = 'none';
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('transferFormNickname').style.display = 'none';
+                document.getElementById('transferFormCard').style.display = 'flex';
+            }
+        }
+
+        async function processTransfer(type) {
+            let recipient, amount;
+
+            if (type === 'nickname') {
+                recipient = document.getElementById('recipientNickname').value.trim();
+                amount = parseFloat(document.getElementById('amountNickname').value);
+            } else {
+                recipient = document.getElementById('recipientCard').value.trim().replace(/\s/g, '');
+                amount = parseFloat(document.getElementById('amountCard').value);
+            }
+
+            if (!recipient || !amount || amount < 1) {
+                alert('Заполните все поля корректно');
+                return;
+            }
+
+            try {
+                const senderSnapshot = await database.ref('cards/' + currentUsername).once('value');
+                const senderCard = senderSnapshot.val();
+
+                if (!senderCard) {
+                    alert('Создайте карту для совершения переводов');
+                    return;
+                }
+
+                if (senderCard.balance < amount) {
+                    alert('Недостаточно средств на счете');
+                    return;
+                }
+
+                let recipientUsername = null;
+
+                if (type === 'nickname') {
+                    const recipientUser = users.find(u => u.username === recipient);
+                    if (!recipientUser) {
+                        alert('Пользователь с таким никнеймом не найден');
+                        return;
+                    }
+                    recipientUsername = recipient;
+
+                    const recipientSnapshot = await database.ref('cards/' + recipientUsername).once('value');
+                    if (!recipientSnapshot.exists()) {
+                        alert('У получателя нет карты');
+                        return;
+                    }
+                } else {
+                    const cardsSnapshot = await database.ref('cards').once('value');
+                    const allCards = cardsSnapshot.val();
+
+                    for (let username in allCards) {
+                        if (allCards[username].number.replace(/\s/g, '') === recipient) {
+                            recipientUsername = username;
+                            break;
+                        }
+                    }
+
+                    if (!recipientUsername) {
+                        alert('Карта с таким номером не найдена');
+                        return;
+                    }
+                }
+
+                if (recipientUsername === currentUsername) {
+                    alert('Нельзя переводить средства самому себе');
+                    return;
+                }
+
+                const recipientSnapshot = await database.ref('cards/' + recipientUsername).once('value');
+                const recipientCard = recipientSnapshot.val();
+
+                const updates = {};
+                updates['cards/' + currentUsername + '/balance'] = senderCard.balance - amount;
+                updates['cards/' + recipientUsername + '/balance'] = recipientCard.balance + amount;
+
+                const transferData = {
+                    from: currentUsername,
+                    to: recipientUsername,
+                    amount: amount,
+                    date: new Date().toISOString(),
+                    type: type
+                };
+
+                const newTransferKey = database.ref().child('transfers').push().key;
+                updates['transfers/' + currentUsername + '/' + newTransferKey] = {
+                    ...transferData,
+                    direction: 'sent'
+                };
+                updates['transfers/' + recipientUsername + '/' + newTransferKey] = {
+                    ...transferData,
+                    direction: 'received'
+                };
+
+                await database.ref().update(updates);
+
+                if (type === 'nickname') {
+                    document.getElementById('recipientNickname').value = '';
+                    document.getElementById('amountNickname').value = '';
+                } else {
+                    document.getElementById('recipientCard').value = '';
+                    document.getElementById('amountCard').value = '';
+                }
+
+                alert('Перевод выполнен успешно!');
+
+            } catch (error) {
+                console.error('Ошибка перевода:', error);
+                alert('Ошибка при выполнении перевода');
+            }
+        }
+
+        function loadTransferHistory() {
+            database.ref('transfers/' + currentUsername).limitToLast(10).once('value')
+                .then((snapshot) => {
+                    const transfers = [];
+                    snapshot.forEach((childSnapshot) => {
+                        transfers.push(childSnapshot.val());
+                    });
+
+                    const historyContainer = document.getElementById('historyContainer');
+
+                    if (transfers.length === 0) {
+                        historyContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">История пуста</p>';
+                        return;
+                    }
+
+                    const sortedTransfers = transfers.sort((a, b) => {
+                        return new Date(b.date) - new Date(a.date);
+                    });
+
+                    historyContainer.innerHTML = sortedTransfers.map(t => {
+                        const isSent = t.direction === 'sent';
+                        const otherUser = isSent ? t.to : t.from;
+                        const sign = isSent ? '-' : '+';
+                        const amountClass = isSent ? 'negative' : 'positive';
+                        const itemClass = isSent ? 'sent' : 'received';
+                        const date = new Date(t.date).toLocaleString('ru-RU');
+
+                        return `
+                            <div class="history-item ${itemClass}">
+                                <p><strong>${isSent ? 'Перевод для' : 'Получено от'}:</strong> ${otherUser}</p>
+                                <p class="history-amount ${amountClass}">${sign}${t.amount} ₽</p>
+                                <p style="font-size: 11px; color: var(--text-secondary);">${date}</p>
+                            </div>
+                        `;
+                    }).join('');
+                })
+                .catch((error) => {
+                    console.error('Ошибка загрузки истории:', error);
+                });
+
+            database.ref('transfers/' + currentUsername).on('child_added', (snapshot) => {
+                if (document.getElementById('dashboard').style.display === 'block') {
+                    setTimeout(() => loadTransferHistory(), 500);
+                }
+            });
+        }
+
+        function handleLogout() {
+            database.ref('cards/' + currentUsername).off();
+            database.ref('transfers/' + currentUsername).off();
+
+            localStorage.removeItem('hohlgramSession');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('mainContainer').classList.remove('wide');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('message').style.display = 'none';
+            currentUsername = '';
+            balanceVisible = true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardInput = document.getElementById('recipientCard');
+            if (cardInput) {
+                cardInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s/g, '');
+                    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                    e.target.value = formattedValue;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
